@@ -166,3 +166,222 @@ function calcularTempos() {
         }
     });
 }
+
+
+function metodoBissecao(funcao, inicio, fim, tolerancia, maxIteracoes) {
+    let a = inicio;
+    let b = fim;
+    const tabela = [];
+
+    for (let i = 0; i < maxIteracoes; i++) {
+        const c = (a + b) / 2;
+        const fc = funcao(c);
+
+        tabela.push({
+            iteracao: i + 1,
+            inicio: a,
+            fim: b,
+            medio: c,
+            ymédio: fc,
+            yfinal: funcao(b),
+            tolerância: Math.abs(b - a)
+        });
+
+        // Verifica a convergência
+        if (Math.abs(fc) < tolerancia || Math.abs(b - a) < tolerancia) {
+            document.getElementById("resultadoRaiz").textContent = `Raiz Estimada: ${c.toFixed(6)}`;
+            document.getElementById("resultadoTolerancia").textContent = `Tolerância Alcançada: ${Math.abs(fc).toFixed(6)}`;
+            break;
+        }
+
+        // Atualiza o intervalo
+        if (funcao(a) * fc < 0) {
+            b = c;
+        } else {
+            a = c;
+        }
+    }
+
+    // Atualiza a tabela de iterações
+    const tabelaBissecao = document.getElementById("tabelaBissecao").getElementsByTagName("tbody")[0];
+    tabelaBissecao.innerHTML = ""; // Limpa a tabela antes de atualizar
+    tabela.forEach((linha) => {
+        const row = tabelaBissecao.insertRow();
+        Object.values(linha).forEach((valor) => {
+            const cell = row.insertCell();
+            cell.textContent = valor.toFixed(6);
+        });
+    });
+
+    // Plota o gráfico da função no intervalo
+    const ctx = document.getElementById("graficoBissecao").getContext("2d");
+    const pontosX = [];
+    const pontosY = [];
+    const passos = 100;
+    const incremento = (fim - inicio) / passos;
+    for (let x = inicio; x <= fim; x += incremento) {
+        pontosX.push(x.toFixed(6));
+        pontosY.push(funcao(x).toFixed(6));
+    }
+
+    new Chart(ctx, {
+        type: "line",
+        data: {
+            labels: pontosX,
+            datasets: [{
+                label: "Função",
+                data: pontosY,
+                borderColor: "blue",
+                fill: false,
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: "Gráfico da Função no Intervalo"
+                }
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: "x"
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: "f(x)"
+                    }
+                }
+            }
+        }
+    });
+}
+function calcularBissecao() {
+    // Obtém os valores do formulário
+    const inicio = parseFloat(document.getElementById("inicio").value);
+    const fim = parseFloat(document.getElementById("fim").value);
+    const tolerancia = parseFloat(document.getElementById("tolerancia").value);
+    const maxIteracoes = parseInt(document.getElementById("maxIteracoes").value, 10);
+    const funcaoInput = document.getElementById("funcao").value;
+
+    // Transforma a string da função em uma função JavaScript
+    let funcao;
+    try {
+        funcao = new Function("x", `return ${funcaoInput};`);
+    } catch (e) {
+        alert("Erro na função fornecida. Verifique a sintaxe.");
+        return;
+    }
+
+    // Chama o método da bisseção
+    metodoBissecao(funcao, inicio, fim, tolerancia, maxIteracoes);
+}
+
+function metodoBissecao(funcao, inicio, fim, tolerancia, maxIteracoes) {
+    let a = inicio;
+    let b = fim;
+    const tabela = [];
+    const pontosMedios = []; // Para armazenar os pontos médios
+
+    for (let i = 0; i < maxIteracoes; i++) {
+        const c = (a + b) / 2;
+        const fc = funcao(c);
+
+        tabela.push({
+            iteracao: i + 1,
+            inicio: a,
+            fim: b,
+            medio: c,
+            ymédio: fc,
+            yfinal: funcao(b),
+            tolerância: Math.abs(b - a)
+        });
+
+        // Armazena o ponto médio e seu valor
+        pontosMedios.push({ x: c, y: fc });
+
+        // Verifica a convergência
+        if (Math.abs(fc) < tolerancia || Math.abs(b - a) < tolerancia) {
+            document.getElementById("resultadoRaiz").textContent = `Raiz Estimada: ${c.toFixed(6)}`;
+            document.getElementById("resultadoTolerancia").textContent = `Tolerância Alcançada: ${Math.abs(fc).toFixed(6)}`;
+            break;
+        }
+
+        // Atualiza o intervalo
+        if (funcao(a) * fc < 0) {
+            b = c;
+        } else {
+            a = c;
+        }
+    }
+
+    // Atualiza a tabela de iterações
+    const tabelaBissecao = document.getElementById("tabelaBissecao").getElementsByTagName("tbody")[0];
+    tabelaBissecao.innerHTML = ""; // Limpa a tabela
+    tabela.forEach((linha) => {
+        const row = tabelaBissecao.insertRow();
+        Object.values(linha).forEach((valor) => {
+            const cell = row.insertCell();
+            cell.textContent = valor.toFixed(6);
+        });
+    });
+
+    // Plota o gráfico da função no intervalo
+    const ctx = document.getElementById("graficoBissecao").getContext("2d");
+    const pontosX = [];
+    const pontosY = [];
+    const passos = 100;
+    const incremento = (fim - inicio) / passos;
+
+    for (let x = inicio; x <= fim; x += incremento) {
+        pontosX.push(x.toFixed(6));
+        pontosY.push(funcao(x).toFixed(6));
+    }
+
+    new Chart(ctx, {
+        type: "line",
+        data: {
+            labels: pontosX,
+            datasets: [{
+                label: "Função",
+                data: pontosY,
+                borderColor: "blue",
+                fill: false,
+            }, {
+                label: "Pontos Médios",
+                data: pontosMedios.map(p => p.y.toFixed(6)),
+                borderColor: "red",
+                pointStyle: 'circle',
+                pointRadius: 5,
+                fill: false,
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: "Gráfico da Função no Intervalo"
+                }
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: "x"
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: "f(x)"
+                    }
+                }
+            }
+        }
+    });
+}

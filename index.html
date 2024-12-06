@@ -70,6 +70,53 @@
                 <canvas id="grafico3" width="800" height="400"></canvas>
             </div>
         </div>
+        
+            <!-- Nova seção: Método da Bisseção -->
+            <div class="section">
+                <h1>Método da Bisseção</h1>
+                <label for="inicio">Início do Intervalo: </label>
+                <input type="number" id="inicio" step="0.01" value="0"><br>
+    
+                <label for="fim">Fim do Intervalo: </label>
+                <input type="number" id="fim" step="0.01" value="1"><br>
+    
+                <label for="maxIteracoes">Número Máximo de Iterações: </label>
+                <input type="number" id="maxIteracoes" value="50"><br>
+    
+                <label for="tolerancia">Tolerância: </label>
+                <input type="number" id="tolerancia" step="0.0001" value="0.0001"><br>
+    
+                <label for="funcao">Função (exemplo: x*x - 4): </label>
+                <input type="text" id="funcao" value="x*x - 4"><br>
+                <button onclick="calcularBissecao()">Calcular Raiz</button>
+    
+                <h2>Resultados</h2>
+                <p id="resultadoRaiz">Raiz Estimada: </p>
+                <p id="resultadoTolerancia">Tolerância Alcançada: </p>
+    
+                <h2>Tabela de Iterações</h2>
+                <table id="tabelaBissecao">
+                    <thead>
+                        <tr>
+                            <th>i</th>
+                            <th>x Inicial</th>
+                            <th>x Médio</th>
+                            <th>x Final</th>
+                            <th>y Inicial</th>
+                            <th>y Médio</th>
+                            <th>y Final</th>
+                            <th>Tolerância</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+    
+                <h2>Gráfico</h2>
+                <div class="grafico-container">
+                    <canvas id="graficoBissecao" width="600" height="400"></canvas>
+                </div>
+            </div>
+        
     </div>
 </body>
 
