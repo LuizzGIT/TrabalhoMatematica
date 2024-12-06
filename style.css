@@ -78,3 +78,7 @@ canvas {
     max-width: 100%;
     height: auto;
 }
+
+#tabelaBissecao thead tr th{
+    padding: 15px;
+}
