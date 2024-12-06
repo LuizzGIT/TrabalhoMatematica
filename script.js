@@ -227,39 +227,93 @@ function metodoBissecao(funcao, inicio, fim, tolerancia, maxIteracoes) {
     new Chart(ctx, {
         type: "line",
         data: {
-            labels: pontosX,
-            datasets: [{
-                label: "Função",
-                data: pontosY,
-                borderColor: "blue",
-                fill: false,
-            }]
+            labels: tamanhos.map(size => `${(size / 125000).toFixed(2)} MB`),
+            datasets: [
+                {
+                    label: "Bubble Sort",
+                    data: temposBubble,
+                    borderColor: "red",
+                    fill: false,
+                    tooltip: {
+                        callbacks: {
+                            label: (tooltipItem) => {
+                                return `Tempo: ${tooltipItem.raw.toFixed(2)}s (Bubble Sort)`;
+                            }
+                        }
+                    }
+                },
+                {
+                    label: "Merge Sort",
+                    data: temposMerge,
+                    borderColor: "blue",
+                    fill: false,
+                    tooltip: {
+                        callbacks: {
+                            label: (tooltipItem) => {
+                                return `Tempo: ${tooltipItem.raw.toFixed(2)}s (Merge Sort)`;
+                            }
+                        }
+                    }
+                },
+                {
+                    label: "Quick Sort",
+                    data: temposQuick,
+                    borderColor: "green",
+                    fill: false,
+                    tooltip: {
+                        callbacks: {
+                            label: (tooltipItem) => {
+                                return `Tempo: ${tooltipItem.raw.toFixed(2)}s (Quick Sort)`;
+                            }
+                        }
+                    }
+                }
+            ]
         },
         options: {
             responsive: true,
             plugins: {
                 title: {
                     display: true,
-                    text: "Gráfico da Função no Intervalo"
+                    text: "Tempos de Ordenação por Método"
                 }
             },
             scales: {
                 x: {
                     title: {
                         display: true,
-                        text: "x"
+                        text: "Volume de Dados (em MB)"
                     }
                 },
                 y: {
                     title: {
                         display: true,
-                        text: "f(x)"
-                    }
+                        text: "Tempo (em segundos)"
+                    },
+                    beginAtZero: true
                 }
             }
         }
     });
+    
+
 }
+
+// Exibe as características dos algoritmos
+const descricaoBubbleSort = "Bubble Sort: Comparação de elementos adjacentes e troca, complexidade O(n²).";
+const descricaoMergeSort = "Merge Sort: Divide e conquista, divide o array em subarrays e os mescla, complexidade O(n log n).";
+const descricaoQuickSort = "Quick Sort: Divide e conquista com escolha de um pivô, particionando o array, complexidade O(n²) no pior caso, mas geralmente O(n log n).";
+
+document.getElementById("descricaoAlgoritmos").innerHTML = `
+    <h3>Características dos Algoritmos de Ordenação</h3>
+    <p><strong>Bubble Sort:</strong> ${descricaoBubbleSort}</p>
+    <p><strong>Merge Sort:</strong> ${descricaoMergeSort}</p>
+    <p><strong>Quick Sort:</strong> ${descricaoQuickSort}</p>
+`;
+
+
+
+
 function calcularBissecao() {
     // Obtém os valores do formulário
     const inicio = parseFloat(document.getElementById("inicio").value);
